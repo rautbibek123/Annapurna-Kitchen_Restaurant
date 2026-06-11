@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Toast';
 import { UserPlus, Trash2, Shield, User, UserCheck } from 'lucide-react';
+import { apiFetch } from '../../lib/api';
 
 export default function StaffManagement() {
   const [users, setUsers] = useState([]);
@@ -16,7 +17,7 @@ export default function StaffManagement() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/users', {
+      const res = await apiFetch('/api/users', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -39,7 +40,7 @@ export default function StaffManagement() {
     setIsSubmitting(true);
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/users', {
+      const res = await apiFetch('/api/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ export default function StaffManagement() {
     
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/users/${id}`, {
+      const res = await apiFetch(`/api/users/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

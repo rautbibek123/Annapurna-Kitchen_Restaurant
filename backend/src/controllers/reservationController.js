@@ -7,9 +7,7 @@ const sendEmail = require('../config/nodemailer');
 exports.createReservation = async (req, res, next) => {
   try {
     const { name, email, phone, date, time, guests, message } = req.body;
-
-    // Attach user ID if logged in (passed from frontend manually or optional middleware)
-    const userId = req.body.user || null;
+    const userId = req.user ? req.user.id : null;
 
     const reservation = await Reservation.create({
       user: userId,
@@ -121,17 +119,31 @@ exports.updateReservation = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Reservation not found' });
     }
 
-    // Make sure user is reservation owner
-    if (reservation.user && reservation.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    const isStaff = ['admin', 'manager', 'staff'].includes(req.user.role);
+    const isOwner = reservation.user && reservation.user.toString() === req.user.id;
+
+    if (!isOwner && !isStaff) {
       return res.status(401).json({ success: false, message: 'Not authorized to update this reservation' });
     }
 
     // Prevent update if already confirmed
-    if (reservation.status === 'confirmed' && req.user.role !== 'admin') {
+    if (reservation.status === 'confirmed' && !isStaff) {
       return res.status(400).json({ success: false, message: 'Confirmed reservations cannot be modified. Please contact the restaurant.' });
     }
 
-    reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
+    const allowedUpdates = isStaff
+      ? req.body
+      : {
+          name: req.body.name,
+          email: req.body.email,
+          phone: req.body.phone,
+          date: req.body.date,
+          time: req.body.time,
+          guests: req.body.guests,
+          message: req.body.message,
+        };
+
+    reservation = await Reservation.findByIdAndUpdate(req.params.id, allowedUpdates, {
       new: true,
       runValidators: true
     });

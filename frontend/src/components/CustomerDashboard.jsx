@@ -11,6 +11,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { useToast } from './Toast';
 import AuthModal from './AuthModal';
+import { apiFetch } from '../lib/api';
 
 const statusConfig = {
   pending:   { label: 'Pending',   color: '#f39c12', bg: 'rgba(243,156,18,0.1)',   icon: AlertCircle  },
@@ -80,7 +81,7 @@ export default function CustomerDashboard() {
   const fetchMyReservations = async () => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/reservations/me', {
+      const res = await apiFetch('/api/reservations/me', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -97,7 +98,7 @@ export default function CustomerDashboard() {
     setUpdatingProfile(true);
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/auth/updateme', {
+      const res = await apiFetch('/api/auth/updateme', {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',

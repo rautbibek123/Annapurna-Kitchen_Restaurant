@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Toast';
 import { Send, Plus, Minus, Trash2, ShoppingBag, Utensils, CheckCircle2, ChevronRight, X, Search, Printer, User as UserIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { apiFetch } from '../../lib/api';
 
 export default function POS() {
   const [menuItems, setMenuItems] = useState([]);
@@ -33,8 +34,8 @@ export default function POS() {
     const fetchData = async () => {
       try {
         const [menuRes, tablesRes] = await Promise.all([
-          fetch('/api/menu'),
-          fetch('/api/tables') 
+          apiFetch('/api/menu'),
+          apiFetch('/api/tables') 
         ]);
         
         const menuData = await menuRes.json();
@@ -225,7 +226,7 @@ export default function POS() {
         paymentMethod: payMethod
       };
 
-      const res = await fetch('/api/orders', {
+      const res = await apiFetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

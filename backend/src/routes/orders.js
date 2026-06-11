@@ -6,6 +6,7 @@ const router = express.Router();
 
 // All order routes require at least staff access
 router.use(protect);
+router.use(authorize('admin', 'manager', 'staff'));
 
 // Admin/Manager/Staff can view and create orders
 router.route('/')

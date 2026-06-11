@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Toast';
 import { CalendarCheck, CheckCircle, XCircle, Clock, Users, AlertCircle, Layout, Map as MapIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { apiFetch } from '../../lib/api';
 
 const STATUS_OPTIONS = ['confirmed', 'cancelled', 'pending'];
 
@@ -25,8 +26,8 @@ export default function TableManagement() {
     try {
       const token = localStorage.getItem('portal_token');
       const [resvRes, tablesRes] = await Promise.all([
-        fetch('/api/reservations', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/tables', { headers: { Authorization: `Bearer ${token}` } })
+        apiFetch('/api/reservations', { headers: { Authorization: `Bearer ${token}` } }),
+        apiFetch('/api/tables', { headers: { Authorization: `Bearer ${token}` } })
       ]);
       
       const resvData = await resvRes.json();
@@ -60,7 +61,7 @@ export default function TableManagement() {
   const handleStatusUpdate = async (id, newStatus) => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/reservations/${id}/status`, {
+      const res = await apiFetch(`/api/reservations/${id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ status: newStatus })

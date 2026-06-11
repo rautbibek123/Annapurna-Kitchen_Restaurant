@@ -2018,6 +2018,8 @@
   .table-showcase-content { padding: 24px; }
   .tables-info-banner { flex-direction: column; text-align: center; gap: 16px; padding: 24px; }
 }
+
+.reservations-list-title {
   color: var(--color-gold);
   font-size: 1.8rem;
   margin-bottom: 24px;

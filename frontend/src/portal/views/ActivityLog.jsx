@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Clock, Search, Filter, RefreshCcw } from 'lucide-react';
 import { useToast } from '../../components/Toast';
+import { apiFetch } from '../../lib/api';
 
 export default function ActivityLog() {
   const [logs, setLogs] = useState([]);
@@ -12,7 +13,7 @@ export default function ActivityLog() {
     setLoading(true);
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/activity-logs', {
+      const res = await apiFetch('/api/activity-logs', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();

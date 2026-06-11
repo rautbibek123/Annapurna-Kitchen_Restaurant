@@ -8,6 +8,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { apiFetch } from '../../lib/api';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -30,8 +31,8 @@ export default function Dashboard() {
       try {
         const token = localStorage.getItem('portal_token');
         const [statsRes, logsRes] = await Promise.all([
-          fetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` }}),
-          fetch('/api/activity-logs', { headers: { 'Authorization': `Bearer ${token}` }})
+          apiFetch('/api/orders', { headers: { 'Authorization': `Bearer ${token}` }}),
+          apiFetch('/api/activity-logs', { headers: { 'Authorization': `Bearer ${token}` }})
         ]);
         
         const ordersData = await statsRes.json();

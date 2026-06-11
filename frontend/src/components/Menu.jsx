@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MenuCard from './MenuCard';
+import { apiFetch } from '../lib/api';
 
 export default function Menu() {
   const [active, setActive] = useState('All');
@@ -11,7 +12,7 @@ export default function Menu() {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
-        const res = await fetch('/api/menu');
+        const res = await apiFetch('/api/menu');
         const data = await res.json();
         if (data.success) {
           setMenuItems(data.data);

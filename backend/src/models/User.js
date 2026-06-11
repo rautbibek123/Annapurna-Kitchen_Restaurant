@@ -42,7 +42,7 @@ userSchema.pre('save', async function(next) {
 
 // Sign JWT and return
 userSchema.methods.getSignedJwtToken = function() {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET || 'secret123', {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: '30d',
   });
 };

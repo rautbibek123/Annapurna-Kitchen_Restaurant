@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send } from 'lucide-react';
 import { useToast } from './Toast';
+import { apiFetch } from '../lib/api';
 
 // Inline SVG social icons — no external dependency
 const SvgInstagram = () => (
@@ -69,7 +70,7 @@ export default function Footer() {
     }
     setSubLoading(true);
     try {
-      const res = await fetch('/api/newsletter', {
+      const res = await apiFetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

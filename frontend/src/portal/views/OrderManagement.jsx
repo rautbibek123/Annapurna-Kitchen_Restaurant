@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../components/Toast';
 import { Clock, CheckCircle2, Play, CheckCircle, Table, User, Banknote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { apiFetch } from '../../lib/api';
 
 export default function OrderManagement() {
   const [orders, setOrders] = useState([]);
@@ -14,7 +15,7 @@ export default function OrderManagement() {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/orders', {
+      const res = await apiFetch('/api/orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -44,7 +45,7 @@ export default function OrderManagement() {
   const updateStatus = async (id, status) => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/orders/${id}/status`, {
+      const res = await apiFetch(`/api/orders/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

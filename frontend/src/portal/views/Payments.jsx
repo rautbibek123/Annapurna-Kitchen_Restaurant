@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../../components/Toast';
+import { apiFetch } from '../../lib/api';
 
 export default function Payments() {
   const [orders, setOrders] = useState([]);
@@ -30,7 +31,7 @@ export default function Payments() {
     setLoading(true);
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/orders', {
+      const res = await apiFetch('/api/orders', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -51,7 +52,7 @@ export default function Payments() {
   const handleProcessPayment = async (orderId, method) => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/orders/${orderId}/pay`, {
+      const res = await apiFetch(`/api/orders/${orderId}/pay`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

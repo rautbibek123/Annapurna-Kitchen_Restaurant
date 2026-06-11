@@ -4,6 +4,7 @@ import { Calendar, Clock, Users, Send, CheckCircle2, User, Mail, Phone, MessageS
 import { useToast } from './Toast';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import { apiFetch } from '../lib/api';
 
 const TIMES = ['12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','6:00 PM','6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM'];
 const GUESTS = ['1 Guest','2 Guests','3 Guests','4 Guests','5 Guests','6+ Guests'];
@@ -56,12 +57,14 @@ export default function Reservation() {
 
     setLoading(true);
     try {
-      // Attach logged-in customer's ID so reservation shows in their dashboard
-      const payload = user ? { ...form, user: user.id || user._id } : form;
-      const res = await fetch('/api/reservations', {
+      const token = localStorage.getItem('portal_token');
+      const res = await apiFetch('/api/reservations', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(form),
       });
 
       if (!res.ok) {

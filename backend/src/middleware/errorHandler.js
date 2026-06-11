@@ -18,9 +18,14 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  res.status(err.statusCode || 500).json({
+  const statusCode = err.statusCode || 500;
+  const message = process.env.NODE_ENV === 'production' && statusCode === 500
+    ? 'Server Error'
+    : err.message || 'Server Error';
+
+  res.status(statusCode).json({
     success: false,
-    message: err.message || 'Server Error',
+    message,
   });
 };
 

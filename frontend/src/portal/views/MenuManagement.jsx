@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '../../components/Toast';
+import { apiFetch } from '../../lib/api';
 
 export default function MenuManagement() {
   const [items, setItems] = useState([]);
@@ -42,7 +43,7 @@ export default function MenuManagement() {
     setLoading(true);
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch('/api/menu?admin=true', {
+      const res = await apiFetch('/api/menu?admin=true', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -124,7 +125,7 @@ export default function MenuManagement() {
     if (!window.confirm('Are you sure you want to delete this item?')) return;
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/menu/${id}`, {
+      const res = await apiFetch(`/api/menu/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -141,7 +142,7 @@ export default function MenuManagement() {
   const toggleAvailability = async (item) => {
     try {
       const token = localStorage.getItem('portal_token');
-      const res = await fetch(`/api/menu/${item._id}`, {
+      const res = await apiFetch(`/api/menu/${item._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

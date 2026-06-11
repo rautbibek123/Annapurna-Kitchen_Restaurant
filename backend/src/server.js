@@ -16,6 +16,14 @@ const menu = require('./routes/menu');
 const tables = require('./routes/tables');
 const activityLogs = require('./routes/activityLogs');
 
+const requiredEnv = ['MONGODB_URI', 'JWT_SECRET'];
+const missingEnv = requiredEnv.filter((key) => !process.env[key]);
+
+if (missingEnv.length > 0) {
+  console.error(`Missing required environment variable(s): ${missingEnv.join(', ')}`);
+  process.exit(1);
+}
+
 // Connect to database
 connectDB();
 
@@ -26,7 +34,25 @@ app.use(express.json());
 
 // Security middleware
 app.use(helmet());
-app.use(cors());
+const allowedOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+if (process.env.NODE_ENV !== 'production') {
+  allowedOrigins.push('http://localhost:5173', 'http://127.0.0.1:5173');
+}
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 
 // Rate limiting (100 requests per 10 mins)
 const limiter = rateLimit({
